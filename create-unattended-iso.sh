@@ -45,11 +45,11 @@ function program_is_installed {
 }
 
 # print a pretty header
-echo 
+echo
 echo " +---------------------------------------------------+"
 echo " |            UNATTENDED UBUNTU ISO MAKER            |"
 echo " +---------------------------------------------------+"
-echo 
+echo
 
 # ask whether to include vmware tools or not
 while true; do
@@ -73,8 +73,8 @@ while true; do
 done
 
 # ask the user questions about his/her preferences
-read -ep " please enter your preferred timezone: " -i "Europe/Amsterdam" timezone
-read -ep " please enter your preferred username: " -i "netson" username
+read -ep " please enter your preferred timezone: " -i "Europa/Berlin" timezone
+read -ep " please enter your preferred username: " -i "administrator" username
 read -sp " please enter your preferred password: " password
 printf "\n"
 read -sp " confirm your preferred password: " password2
@@ -173,7 +173,7 @@ umount $tmp/iso_org
 rm -rf $tmp/iso_new
 rm -rf $tmp/iso_org
 
-# print info to user  
+# print info to user
 echo " -----"
 echo " finished remastering your ubuntu iso file"
 echo " the new file is located at: $tmp/$new_iso_name"
