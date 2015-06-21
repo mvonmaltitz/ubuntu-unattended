@@ -117,7 +117,7 @@ pluginsync=true\n\
         if [[ ! -f $tmp/finish.sh ]]; then
             echo -n " downloading finish.sh: "
             cd $tmp
-            download "https://raw.githubusercontent.com/netson/ubuntu-unattended/master/finish.sh"
+            download "https://raw.githubusercontent.com/mvonmaltitz/ubuntu-unattended/master/finish.sh"
         fi
 
         # set proper permissions on finish script
