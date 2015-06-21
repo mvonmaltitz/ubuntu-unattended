@@ -2,7 +2,6 @@
 
 # file names & paths
 tmp="/tmp"  # destination folder to store the final iso file
-hostname="pepper"
 
 # define spinner function for slow tasks
 # courtesy of http://fitnr.com/showing-a-bash-spinner.html
@@ -74,6 +73,7 @@ done
 
 # ask the user questions about his/her preferences
 read -ep " please enter your preferred timezone: " -i "Europa/Berlin" timezone
+read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
 read -ep " please enter your preferred username: " -i "administrator" username
 read -sp " please enter your preferred password: " password
 printf "\n"
