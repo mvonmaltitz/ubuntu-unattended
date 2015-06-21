@@ -2,7 +2,7 @@
 
 # file names & paths
 tmp="/tmp"  # destination folder to store the final iso file
-hostname="ubuntu"
+hostname="pepper"
 
 # define spinner function for slow tasks
 # courtesy of http://fitnr.com/showing-a-bash-spinner.html
@@ -98,7 +98,7 @@ fi
 seed_file="netson.seed"
 if [[ ! -f $tmp/$seed_file ]]; then
     echo -h " downloading $seed_file: "
-    download "https://github.com/netson/ubuntu-unattended/raw/master/$seed_file"
+    download "https://github.com/mvonmaltitz/ubuntu-unattended/raw/master/$seed_file"
 fi
 
 # install required packages
@@ -132,7 +132,7 @@ cd $tmp/iso_new
 echo en > $tmp/iso_new/isolinux/lang
 
 # set late command
-late_command="chroot /target wget -O /home/$username/start.sh https://github.com/netson/ubuntu-unattended/raw/master/start.sh ;\
+late_command="chroot /target wget -O /home/$username/start.sh https://github.com/mvonmaltitz/ubuntu-unattended/raw/master/start.sh ;\
     chroot /target chmod +x /home/$username/start.sh ;"
 
 # copy the netson seed file to the iso
