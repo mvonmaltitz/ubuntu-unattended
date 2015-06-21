@@ -1,18 +1,18 @@
 # regional setting
-d-i debian-installer/language                               string      en_US:en
-d-i debian-installer/country                                string      US
-d-i debian-installer/locale                                 string      en_US
+d-i debian-installer/language                               string      de_DE:de
+d-i debian-installer/country                                string      DE
+d-i debian-installer/locale                                 string      de_DE
 d-i debian-installer/splash                                 boolean     false
-d-i localechooser/supported-locales                         multiselect en_US.UTF-8
+d-i localechooser/supported-locales                         multiselect de_DE.UTF-8
 d-i pkgsel/install-language-support                         boolean     true
 
 # keyboard selection
 d-i console-setup/ask_detect                                boolean     false
 d-i keyboard-configuration/modelcode                        string      pc105
-d-i keyboard-configuration/layoutcode                       string      us
+d-i keyboard-configuration/layoutcode                       string      de
 d-i keyboard-configuration/variantcode                      string      intl
-d-i keyboard-configuration/xkb-keymap                       select      us(intl)
-d-i debconf/language                                        string      en_US:en
+d-i keyboard-configuration/xkb-keymap                       select      de(intl)
+d-i debconf/language                                        string      de_DE:de
 
 # network settings
 d-i netcfg/choose_interface                                 select      auto
