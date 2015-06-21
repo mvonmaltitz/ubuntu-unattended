@@ -5,7 +5,7 @@ set -e
 default_hostname="$(hostname)"
 default_domain="netson.local"
 default_puppetmaster="foreman.netson.nl"
-tmp="/home/netson/"
+tmp="/home/$(whoami)/"
 
 clear
 
@@ -98,7 +98,7 @@ if [[ include_puppet_repo -eq 1 ]]; then
     dpkg -i $tmp/$puppet_deb > /dev/null 2>&1
     apt-get -y update > /dev/null 2>&1
     rm $tmp/$puppet_deb
-    
+
     # check to install puppet agent
     if [[ setup_agent -eq 1 ]] ; then
         # install puppet
