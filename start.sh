@@ -77,18 +77,30 @@ echo " preparing your server; this may take a few minutes ..."
 fqdn="$hostname.$domain"
 
 # update hostname
+echo -n "Setting hostname..."
 echo "$hostname" > /etc/hostname
 sed -i "s@127.0.1.1.*@127.0.1.1\t$hostname $fqdn@g" /etc/hosts
 #sed -i "s@ubuntu.ubuntu@$fqdn@g" /etc/hosts
 #sed -i "s@ubuntu@$hostname@g" /etc/hosts
 hostname "$hostname"
+echo "done"
 
 # update repos
+echo -n "apt-get update..."
 apt-get -y update > /dev/null 2>&1
+echo "done"
+echo -n "apt-get upgrade"
 apt-get -y upgrade > /dev/null 2>&1
+echo "done"
+echo -n "apt-get dist-upgrade"
 apt-get -y dist-upgrade > /dev/null 2>&1
+echo "done"
+echo -n "apt-get autoremove"
 apt-get -y autoremove > /dev/null 2>&1
+echo "done"
+echo -n "apt-get purge"
 apt-get -y purge > /dev/null 2>&1
+echo "done"
 
 # install puppet
 if [[ include_puppet_repo -eq 1 ]]; then
