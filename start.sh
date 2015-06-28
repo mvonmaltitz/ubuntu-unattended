@@ -112,18 +112,18 @@ if [[ include_puppet_repo -eq 1 ]]; then
 fi
 
   # check to install puppet agent
-  if [[ setup_agent -eq 1 ]] ; then
-      # install puppet
-      apt-get -y install puppet avahi-discover > /dev/null 2>&1
+echo -n "Setting up puppet agent"
+if [[ setup_agent -eq 1 ]] ; then
+    # install puppet
+    echo -n "Installing puppet and avahi-discover"
+    apt-get -y install puppet avahi-discover > /dev/null 2>&1
+    echo "done"
 
-      # set puppet master settings
-      sed -i "s@\[master\]@\
-# configure puppet master\n\
-server=$puppetmaster\n\
-report=true\n\
-pluginsync=true\n\
-\n\
-\[master\]@g" /etc/puppet/puppet.conf
+    # set puppet master settings
+    echo "[agent]" >> /etc/puppet/puppet.conf
+    echo "server = server.local" >> /etc/puppet/puppet.conf
+
+echo "done"
 
       # download the finish script if it doesn't yet exist
       if [[ ! -f $tmp/finish.sh ]]; then
