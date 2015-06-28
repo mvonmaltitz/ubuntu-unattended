@@ -3,9 +3,9 @@ set -e
 
 # set defaults
 default_hostname="$(hostname)"
-default_domain="netson.local"
-default_puppetmaster="foreman.netson.nl"
-tmp="/home/$(whoami)/"
+default_domain="local"
+default_puppetmaster="server.local"
+tmp="/home/$(logname)/"
 
 clear
 
@@ -54,21 +54,19 @@ if ! grep -q "noninteractive" /proc/cmdline ; then
         esac
     done
 
-    if [[ include_puppet_repo ]] ; then
-        # ask whether to setup puppet agent or not
-        while true; do
-            read -p " do you wish to setup the puppet agent? [y/n]: " yn
-            case $yn in
-                [Yy]* ) setup_agent=1
-                        read -ep " please enter your puppet master: " -i "$default_puppetmaster" puppetmaster
-                        break;;
-                [Nn]* ) setup_agent=0
-                        puppetmaster="puppet"
-                        break;;
-                * ) echo " please answer [y]es or [n]o.";;
-            esac
-        done
-    fi
+    while true; do
+        read -p " do you wish to setup the puppet agent? [y/n]: " yn
+        case $yn in
+            [Yy]* ) setup_agent=1
+                    read -ep " please enter your puppet master: " -i "$default_puppetmaster" puppetmaster
+                    break;;
+            [Nn]* ) setup_agent=0
+                    puppetmaster="puppet"
+                    break;;
+            * ) echo " please answer [y]es or [n]o.";;
+        esac
+    done
+
 
 fi
 
@@ -80,8 +78,9 @@ fqdn="$hostname.$domain"
 
 # update hostname
 echo "$hostname" > /etc/hostname
-sed -i "s@ubuntu.ubuntu@$fqdn@g" /etc/hosts
-sed -i "s@ubuntu@$hostname@g" /etc/hosts
+sed -i "s@127.0.1.1.*@127.0.1.1\t$hostname $fqdn@g" /etc/hosts
+#sed -i "s@ubuntu.ubuntu@$fqdn@g" /etc/hosts
+#sed -i "s@ubuntu@$hostname@g" /etc/hosts
 hostname "$hostname"
 
 # update repos
@@ -98,14 +97,15 @@ if [[ include_puppet_repo -eq 1 ]]; then
     dpkg -i $tmp/$puppet_deb > /dev/null 2>&1
     apt-get -y update > /dev/null 2>&1
     rm $tmp/$puppet_deb
+fi
 
-    # check to install puppet agent
-    if [[ setup_agent -eq 1 ]] ; then
-        # install puppet
-        apt-get -y install puppet > /dev/null 2>&1
+  # check to install puppet agent
+  if [[ setup_agent -eq 1 ]] ; then
+      # install puppet
+      apt-get -y install puppet avahi-discover > /dev/null 2>&1
 
-        # set puppet master settings
-        sed -i "s@\[master\]@\
+      # set puppet master settings
+      sed -i "s@\[master\]@\
 # configure puppet master\n\
 server=$puppetmaster\n\
 report=true\n\
@@ -113,25 +113,24 @@ pluginsync=true\n\
 \n\
 \[master\]@g" /etc/puppet/puppet.conf
 
-        # download the finish script if it doesn't yet exist
-        if [[ ! -f $tmp/finish.sh ]]; then
-            echo -n " downloading finish.sh: "
-            cd $tmp
-            download "https://raw.githubusercontent.com/mvonmaltitz/ubuntu-unattended/master/finish.sh"
-        fi
+      # download the finish script if it doesn't yet exist
+      if [[ ! -f $tmp/finish.sh ]]; then
+          echo -n " downloading finish.sh: "
+          cd $tmp
+          download "https://raw.githubusercontent.com/mvonmaltitz/ubuntu-unattended/master/finish.sh"
+      fi
 
-        # set proper permissions on finish script
-        chmod +x $tmp/finish.sh
+      # set proper permissions on finish script
+      chmod +x $tmp/finish.sh
 
-        # connect to master and ensure puppet is always the latest version
-        echo " connecting to puppet master to request new certificate"
-        echo " please sign the certificate request on your puppet master ..."
-        puppet agent --waitforcert 60 --test
-        echo " once you've signed the certificate, please run finish.sh from your home directory"
+      # connect to master and ensure puppet is always the latest version
+      echo " connecting to puppet master to request new certificate"
+      echo " please sign the certificate request on your puppet master ..."
+      puppet agent --waitforcert 60 --test
+      echo " once you've signed the certificate, please run finish.sh from your home directory"
 
-    fi
+  fi
 
-fi
 
 # remove myself to prevent any unintended changes at a later stage
 rm $0
