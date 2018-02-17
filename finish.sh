@@ -11,7 +11,7 @@ fi
 echo " finishing your puppet installation ... "
 
 # run puppet config
-sed -i "s@START=no@START=yes@g" /etc/default/puppet
+sed -i "s@START=no@START=yes@g" /etc/default/puppet || echo "START=yes" > /etc/default/puppet
 puppet resource package puppet ensure=latest > /dev/null
 puppet resource service puppet ensure=running enable=true > /dev/null
 puppet agent --enable > /dev/null

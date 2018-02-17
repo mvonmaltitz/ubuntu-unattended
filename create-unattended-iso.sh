@@ -77,7 +77,6 @@ trus=$(fgrep Trusty $tmphtml | head -1 | awk '{print $3}')
 xenn=$(fgrep Xenial $tmphtml | head -1 | awk '{print $3}')
 
 
-
 # ask whether to include vmware tools or not
 while true; do
     echo " which ubuntu edition would you like to remaster:"
@@ -114,8 +113,9 @@ else
 fi
 
 # ask the user questions about his/her preferences
-read -ep " please enter your preferred timezone: " -i "${timezone}" timezone
-read -ep " please enter your preferred username: " -i "netson" username
+read -ep " please enter your preferred timezone: " -i "Europa/Berlin" timezone
+read -ep " please enter your preferred hostname: " -i "ubuntu" hostname
+read -ep " please enter your preferred username: " -i "administrator" username
 read -sp " please enter your preferred password: " password
 printf "\n"
 read -sp " confirm your preferred password: " password2
@@ -147,8 +147,8 @@ fi
 # download netson seed file
 seed_file="netson.seed"
 if [[ ! -f $tmp/$seed_file ]]; then
-    echo -n " downloading $seed_file: "
-    download "https://raw.githubusercontent.com/netson/ubuntu-unattended/master/$seed_file"
+    echo -h " downloading $seed_file: "
+    download "https://github.com/mvonmaltitz/ubuntu-unattended/raw/master/$seed_file"
 fi
 
 # install required packages
@@ -201,15 +201,13 @@ sed -i -r 's/timeout\s+[0-9]+/timeout 1/g' $tmp/iso_new/isolinux/isolinux.cfg
 
 
 # set late command
-
 if [[ $ub1604 == "yes" ]]; then
    late_command="apt-install wget; in-target wget --no-check-certificate -O /home/$username/start.sh https://github.com/netson/ubuntu-unattended/raw/master/start.sh ;\
      in-target chmod +x /home/$username/start.sh ;"
-else 
+else
    late_command="chroot /target wget -O /home/$username/start.sh https://github.com/netson/ubuntu-unattended/raw/master/start.sh ;\
      chroot /target chmod +x /home/$username/start.sh ;"
 fi
-
 
 
 # copy the netson seed file to the iso
