@@ -209,7 +209,6 @@ else
      chroot /target chmod +x /home/$username/start.sh ;"
 fi
 
-
 # copy the netson seed file to the iso
 cp -rT $tmp/$seed_file $tmp/iso_new/preseed/$seed_file
 
